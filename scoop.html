@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weazel News - Ajoute un scoop</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #111;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            min-height: 100vh;
+        }
+
+        header {
+            background-color: #900;
+            padding: 20px;
+            text-align: center;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin: 0;
+        }
+
+        .container {
+            padding: 20px;
+            text-align: center;
+            margin-top: 20px;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        .cta {
+            margin-top: 20px;
+        }
+
+        .cta button {
+            background-color: #900;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1em;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .cta button:hover {
+            background-color: #b30000;
+        }
+
+        footer {
+            background-color: #222;
+            padding: 10px;
+            text-align: center;
+            font-size: 0.8em;
+            color: #aaa;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 10%;
+            left: 50%;
+            transform: translate(-50%, 0);
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .modal-content {
+            background-color: #222;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            color: #fff;
+        }
+
+        .modal-content h2 {
+            margin-top: 0;
+        }
+
+        .modal-content input,
+        .modal-content textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #444;
+            background-color: #111;
+            color: #fff;
+        }
+
+        .modal-content input[type="file"] {
+            background-color: #222;
+        }
+
+        .modal-content button {
+            background-color: #900;
+            color: white;
+            border: none;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .modal-content button:hover {
+            background-color: #b30000;
+        }
+
+        .close-btn {
+            float: right;
+            cursor: pointer;
+            color: #fff;
+            font-size: 1.2em;
+        }
+
+        /* Notification personnalisée */
+        .notification {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #900;
+            color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+            z-index: 1001;
+            font-size: 1em;
+            animation: fadein 0.5s, fadeout 0.5s 4.5s;
+        }
+
+        @keyframes fadein {
+            from {opacity: 0;}
+            to {opacity: 1;}
+        }
+
+        @keyframes fadeout {
+            from {opacity: 1;}
+            to {opacity: 0;}
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Weazel News</h1>
+    </header>
+
+    <div class="container">
+        <h2>Ajoutez vos derniers scoops ici !</h2>
+        <p>Partagez les nouvelles exclusives et faites entendre votre voix grâce à Weazel News.</p>
+        
+        <div class="cta">
+            <button onclick="openModal()">Renseigne ton Scoop</button>
+        </div>
+    </div>
+
+    <div class="modal" id="scoopModal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeModal()">&times;</span>
+            <h2>Renseignez votre scoop</h2>
+            <form id="scoopForm">
+                <label for="journalist">Nom du journaliste :</label>
+                <input type="text" id="journalist" name="journalist" required>
+                
+                <label for="enterprise">Entreprise ou personne concernée :</label>
+                <input type="text" id="enterprise" name="enterprise" required>
+                
+                <label for="scoop">Le scoop :</label>
+                <textarea id="scoop" name="scoop" rows="4" required></textarea>
+                
+                <label for="image">Image (optionnelle) :</label>
+                <input type="file" id="image" name="image">
+                
+                <button type="submit">Envoyer</button>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2024 Weazel News. Tous droits réservés. | Suivez-nous sur nos réseaux sociaux.
+    </footer>
+
+    <script>
+        // Script pour gérer l'ouverture et la fermeture de la modale
+        function openModal() {
+            document.getElementById('scoopModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('scoopModal').style.display = 'none';
+        }
+
+        // Affichage de la notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.textContent = message;
+            document.body.appendChild(notification);
+
+            notification.style.display = 'block';
+
+            // Masque la notification après 5 secondes
+            setTimeout(() => {
+                notification.style.display = 'none';
+                notification.remove();
+            }, 5000);
+        }
+
+        // Mise à jour du formulaire pour afficher une belle notification
+        document.getElementById('scoopForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const webhookUrl = 'https://discord.com/api/webhooks/1292284284081668138/rkpjV-VQHl4TzjgAKAD8mem6vR0Hm2L_JVAHxs5NYJcaXodiRPYVZMsP47N9F_6ARumu';
+            const journalist = document.getElementById('journalist').value;
+            const enterprise = document.getElementById('enterprise').value;
+            const scoop = document.getElementById('scoop').value;
+            const image = document.getElementById('image').files[0];
+
+            const formData = new FormData();
+            formData.append('content', `**Nom du journaliste**: ${journalist}\n**Entreprise ou personne concernée**: ${enterprise}\n**Scoop**: ${scoop}`);
+
+            if (image) {
+                formData.append('file', image);
+            }
+
+            fetch(webhookUrl, {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    showNotification('🚨 Scoop envoyé avec succès à Weazel News !');
+                    closeModal();
+                    document.getElementById('scoopForm').reset();
+                } else {
+                    showNotification('❌ Une erreur est survenue lors de l\'envoi du scoop.');
+                }
+            })
+            .catch(error => {
+                showNotification('❌ Une erreur est survenue lors de l\'envoi du scoop.');
+                console.error(error);
+            });
+        });
+    </script>
+</body>
+</html>
